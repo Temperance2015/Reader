@@ -1,8 +1,13 @@
 package com.temperance2015.reader.activity;
 
+import android.app.ActionBar;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,46 +16,89 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.temperance2015.reader.R;
+import com.temperance2015.reader.model.Books;
 import com.temperance2015.reader.util.BooklistAdapter;
+
+import org.litepal.crud.DataSupport;
+import org.litepal.tablemanager.Connector;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView bookListView;
     private LinearLayoutManager linearLayoutManager;
-    private String[] myDataSet;
-    private String[] myReadDate;
+    private ArrayList<String> myDataSet = new ArrayList<>();
+    private ArrayList<String> myReadDate = new ArrayList<>();
     private BooklistAdapter booklistAdapter;
+    private ActionBarDrawerToggle actionBarDrawerToggle;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+
+    private void inDB(){
+        for (int i = 0;i < 10;i++){
+            Books book = new Books();
+            book.setTitle("book " + i);
+            book.setReadDate(getDate());
+            book.save();
+        }
+    }
 
     private void initData(){
-        myDataSet = new String[]{"001","002","003","004","005","006","007"};
-        DateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日HH时mm分ss秒");
-        myReadDate = new String[]{sdf.format(Calendar.getInstance().getTime()),sdf.format(Calendar.getInstance().getTime()),sdf.format(Calendar.getInstance().getTime()),sdf.format(Calendar.getInstance().getTime()),sdf.format(Calendar.getInstance().getTime()),sdf.format(Calendar.getInstance().getTime()),sdf.format(Calendar.getInstance().getTime())};
+        List<Books> booksList = DataSupport.findAll(Books.class);
+        for (int i = 0;i < booksList.size();i++){
+            myDataSet.add(i, booksList.get(i).getTitle());
+            myReadDate.add(i, booksList.get(i).getReadDate());
+        }
+    }
+
+    public String getDate(){
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        return sdf.format(Calendar.getInstance().getTime());
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        SQLiteDatabase db = Connector.getDatabase();
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        navigationView = (NavigationView) findViewById(R.id.navigation_view);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.mipmap.ic_launcher);
 
+        //navigationView
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open,R.string.drawer_close);
+        actionBarDrawerToggle.syncState();
+        drawerLayout.setDrawerListener(actionBarDrawerToggle);
+        navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        setupDrawerContent(navigationView);
+
+        //recyclerView
         bookListView = (RecyclerView) findViewById(R.id.book_list);
         bookListView.setHasFixedSize(true);
         linearLayoutManager = new LinearLayoutManager(this);
         bookListView.setLayoutManager(linearLayoutManager);
         bookListView.setItemAnimator(new DefaultItemAnimator());
+
+        if (DataSupport.find(Books.class,1) == null){
+            inDB();
+        }
         initData();
+
         booklistAdapter = new BooklistAdapter(this,myDataSet,myReadDate);
         bookListView.setAdapter(booklistAdapter);
 
+        //floatingActionButton
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,8 +107,26 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+    }
 
 
+    private void setupDrawerContent(NavigationView navigationView) {
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        switch (menuItem.getItemId()) {
+
+                            case R.id.navigation_item_book:
+                                Toast.makeText(MainActivity.this,"search",Toast.LENGTH_SHORT).show();
+                                break;
+
+                        }
+                        menuItem.setChecked(true);
+                        drawerLayout.closeDrawers();
+                        return true;
+                    }
+                });
     }
 
     @Override
@@ -81,7 +147,6 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

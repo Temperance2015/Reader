@@ -11,14 +11,16 @@ import android.widget.TextView;
 
 import com.temperance2015.reader.R;
 
+import java.util.ArrayList;
+
 
 /**
  * Created by Isabel on 2015/12/14.
  */
 public class BooklistAdapter extends RecyclerView.Adapter<BooklistAdapter.ViewHolder> {
 
-    private String[] bookTitle;
-    private String[] readDate;
+    private ArrayList<String> bookTitle;
+    private ArrayList<String> readDate;
     private final int background;
     private final TypedValue typedValue = new TypedValue();
 
@@ -41,7 +43,7 @@ public class BooklistAdapter extends RecyclerView.Adapter<BooklistAdapter.ViewHo
 
     }
 
-    public BooklistAdapter(Context context,String[] title,String[] date){
+    public BooklistAdapter(Context context,ArrayList<String> title,ArrayList<String> date){
         bookTitle = title;
         readDate = date;
         context.getTheme().resolveAttribute(R.attr.selectableItemBackground,typedValue,true);
@@ -58,12 +60,12 @@ public class BooklistAdapter extends RecyclerView.Adapter<BooklistAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder,int position){
-        holder.title.setText(bookTitle[position]);
-        holder.date.setText(readDate[position]);
+        holder.title.setText(bookTitle.get(position));
+        holder.date.setText(readDate.get(position));
     }
 
     @Override
     public int getItemCount(){
-        return bookTitle.length;
+        return bookTitle.size();
     }
 }
