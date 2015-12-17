@@ -1,7 +1,7 @@
 package com.temperance2015.reader.util;
 
-import android.graphics.Path;
 import android.os.Environment;
+import android.util.Log;
 
 import com.temperance2015.reader.model.Books;
 
@@ -19,11 +19,12 @@ public class Tools {
         return sdf.format(Calendar.getInstance().getTime());
     }
 
-    public static File getPath(){
+    public static File getSDPath(){
         File SDPath;
         boolean SDExists = Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
         if (SDExists){
             SDPath = Environment.getExternalStorageDirectory();
+//            Log.d("SDDirectory","SDPath is "+SDPath.toString());
         }else {
             SDPath = Environment.getRootDirectory();
         }
@@ -36,7 +37,8 @@ public class Tools {
             if (files.length > 0){
                 for (int i = 0; i < files.length; i++){
                     if (!files[i].isDirectory()){
-                        if (files[i].getName().contains(".do")){
+                        if (files[i].getName().contains(".txt")){
+//                            Log.d("search",i+" Path:"+files[i].getPath()+" name:"+files[i].getName());
                             Books book = new Books();
                             book.setPath(files[i].getPath());
                             book.setReadDate(Tools.getDate());
@@ -44,9 +46,9 @@ public class Tools {
                             book.save();
                         }
                     }
-                    else {
-                        search(files[i]);
-                    }
+//                    else {
+//                        search(files[i]);
+//                    }
                 }
             }
         }catch (Exception e){

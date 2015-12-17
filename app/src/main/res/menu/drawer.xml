@@ -4,8 +4,7 @@
     tools:context=".MainActivity">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/navigation_item_book"
-            android:title="@string/navigation_book_search" />
-
+            android:id="@+id/navigation_search"
+            android:title="@string/navigation_search" />
     </group>
 </menu>

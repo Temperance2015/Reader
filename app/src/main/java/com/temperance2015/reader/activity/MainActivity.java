@@ -1,6 +1,5 @@
 package com.temperance2015.reader.activity;
 
-import android.app.ActionBar;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -45,21 +44,23 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
 
-    private void inDB(){
-        for (int i = 0;i < 10;i++){
-            Books book = new Books();
-            book.setTitle("book " + i);
-            book.setReadDate(Tools.getDate());
-            book.save();
-        }
-    }
+//    private void inDB(){
+//        for (int i = 0;i < 10;i++){
+//            Books book = new Books();
+//            book.setTitle("book " + i);
+//            book.setReadDate(Tools.getDate());
+//            book.save();
+//        }
+//    }
 
-    private void initData(){
+    private void dataToList(){
         List<Books> booksList = DataSupport.findAll(Books.class);
         for (int i = 0;i < booksList.size();i++){
             myDataSet.add(i, booksList.get(i).getTitle());
             myReadDate.add(i, booksList.get(i).getReadDate());
         }
+        booklistAdapter = new BooklistAdapter(MainActivity.this,myDataSet,myReadDate);
+        bookListView.setAdapter(booklistAdapter);
     }
 
     @Override
@@ -87,13 +88,10 @@ public class MainActivity extends AppCompatActivity {
         bookListView.setLayoutManager(linearLayoutManager);
         bookListView.setItemAnimator(new DefaultItemAnimator());
 
-        if (DataSupport.find(Books.class,1) == null){
-            inDB();
-        }
-        initData();
-
-        booklistAdapter = new BooklistAdapter(this,myDataSet,myReadDate);
-        bookListView.setAdapter(booklistAdapter);
+//        if (DataSupport.find(Books.class,1) == null){
+//            inDB();
+//        }
+        dataToList();
 
         //floatingActionButton
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -114,11 +112,11 @@ public class MainActivity extends AppCompatActivity {
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
 
-                            case R.id.navigation_item_book:
-                                Tools.search(Tools.getPath());
+                            case R.id.navigation_search:
+                                Tools.search(Tools.getSDPath());
+                                dataToList();
                                 Toast.makeText(MainActivity.this,"search the phone",Toast.LENGTH_SHORT).show();
                                 break;
-
                         }
                         menuItem.setChecked(true);
                         drawerLayout.closeDrawers();
