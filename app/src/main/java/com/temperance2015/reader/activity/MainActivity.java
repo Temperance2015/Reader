@@ -21,10 +21,12 @@ import android.widget.Toast;
 import com.temperance2015.reader.R;
 import com.temperance2015.reader.model.Books;
 import com.temperance2015.reader.util.BooklistAdapter;
+import com.temperance2015.reader.util.Tools;
 
 import org.litepal.crud.DataSupport;
 import org.litepal.tablemanager.Connector;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0;i < 10;i++){
             Books book = new Books();
             book.setTitle("book " + i);
-            book.setReadDate(getDate());
+            book.setReadDate(Tools.getDate());
             book.save();
         }
     }
@@ -58,11 +60,6 @@ public class MainActivity extends AppCompatActivity {
             myDataSet.add(i, booksList.get(i).getTitle());
             myReadDate.add(i, booksList.get(i).getReadDate());
         }
-    }
-
-    public String getDate(){
-        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        return sdf.format(Calendar.getInstance().getTime());
     }
 
     @Override
@@ -118,7 +115,8 @@ public class MainActivity extends AppCompatActivity {
                         switch (menuItem.getItemId()) {
 
                             case R.id.navigation_item_book:
-                                Toast.makeText(MainActivity.this,"search",Toast.LENGTH_SHORT).show();
+                                Tools.search(Tools.getPath());
+                                Toast.makeText(MainActivity.this,"search the phone",Toast.LENGTH_SHORT).show();
                                 break;
 
                         }
