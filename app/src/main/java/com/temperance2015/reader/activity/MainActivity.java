@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(View view, int data) {
                 Toast.makeText(MainActivity.this, "You choose book " + data, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainActivity.this, ShowActivity.class);
+                intent.putExtra("BOOK_ID",data);
                 startActivity(intent);
             }
         });
@@ -105,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
-
                             case R.id.navigation_search:
                                 myId.clear();
                                 myDataSet.clear();
