@@ -5,12 +5,17 @@ import android.util.Log;
 
 import com.temperance2015.reader.model.Books;
 
+import org.litepal.crud.DataSupport;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Isabel on 2015/12/17.
@@ -37,20 +42,27 @@ public class Tools {
         try {
             File[] files = file.listFiles();
             if (files.length > 0){
+                List<Books> booksList = DataSupport.findAll(Books.class);
+                Set<String> pathList = new HashSet<>();
+                for (int j = 0;j < booksList.size();j++){
+                    pathList.add(booksList.get(j).getPath());
+                }
                 for (int i = 0; i < files.length; i++){
                     if (!files[i].isDirectory()){
                         if (files[i].getName().endsWith(".txt")){
 //                            Log.d("search",i+" Path:"+files[i].getPath()+" name:"+files[i].getName());
-                            Books book = new Books();
-                            book.setPath(files[i].getPath());
-                            book.setReadDate(Tools.getDate());
-                            book.setTitle(files[i].getName());
-                            book.save();
+                            if (!pathList.contains(files[i].getPath())){
+                                Books book = new Books();
+                                book.setPath(files[i].getPath());
+                                book.setReadDate(Tools.getDate());
+                                book.setTitle(files[i].getName());
+                                book.save();
+                            }
                         }
                     }
 //                    else {
 //                        search(files[i]);
-//                    }
+//                    }//进入目录下继续搜索,不用
                 }
             }
         }catch (Exception e){

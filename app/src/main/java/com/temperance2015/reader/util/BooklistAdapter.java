@@ -1,7 +1,6 @@
 package com.temperance2015.reader.util;
 
 import android.content.Context;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.View;
@@ -24,20 +23,20 @@ public class BooklistAdapter extends RecyclerView.Adapter<BooklistAdapter.ViewHo
     private ArrayList<String> readDate;
     private final int background;
     private final TypedValue typedValue = new TypedValue();
-    private OnRecyclerViewItemClickListener mOnItemClickListener = null;
-    public static interface OnRecyclerViewItemClickListener {
+    private OnRecyclerViewItemClickListener onItemClickListener = null;
+    public interface OnRecyclerViewItemClickListener {
         void onItemClick(View view , int data);
     }
 
     public void setOnItemClickListener(OnRecyclerViewItemClickListener listener) {
-        this.mOnItemClickListener = listener;
+        this.onItemClickListener = listener;
     }
 
     @Override
      public void onClick(View view){
-        if (mOnItemClickListener != null) {
+        if (onItemClickListener != null) {
             //使用getTag方法获取数据
-            mOnItemClickListener.onItemClick(view,(int)view.getTag());
+            onItemClickListener.onItemClick(view,(int)view.getTag());
         }
     }
 

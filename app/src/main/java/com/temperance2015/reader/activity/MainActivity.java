@@ -16,7 +16,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.temperance2015.reader.R;
@@ -52,6 +51,14 @@ public class MainActivity extends AppCompatActivity {
         }
         booklistAdapter = new BooklistAdapter(MainActivity.this,myId,myDataSet,myReadDate);
         bookListView.setAdapter(booklistAdapter);
+        booklistAdapter.setOnItemClickListener(new BooklistAdapter.OnRecyclerViewItemClickListener() {
+            @Override
+            public void onItemClick(View view, int data) {
+                Toast.makeText(MainActivity.this, "You choose book " + data, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, ShowActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -78,17 +85,7 @@ public class MainActivity extends AppCompatActivity {
         linearLayoutManager = new LinearLayoutManager(this);
         bookListView.setLayoutManager(linearLayoutManager);
         bookListView.setItemAnimator(new DefaultItemAnimator());
-        booklistAdapter = new BooklistAdapter(MainActivity.this,myId,myDataSet,myReadDate);
         dataToList();
-        bookListView.setAdapter(booklistAdapter);
-        booklistAdapter.setOnItemClickListener(new BooklistAdapter.OnRecyclerViewItemClickListener() {
-            @Override
-            public void onItemClick(View view, int data) {
-                Toast.makeText(MainActivity.this, "You choose book "+data, Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, ShowActivity.class);
-                startActivity(intent);
-            }
-        });
 
         //floatingActionButton
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -110,6 +107,9 @@ public class MainActivity extends AppCompatActivity {
                         switch (menuItem.getItemId()) {
 
                             case R.id.navigation_search:
+                                myId.clear();
+                                myDataSet.clear();
+                                myReadDate.clear();
                                 Tools.search(Tools.getSDPath());
                                 dataToList();
                                 Toast.makeText(MainActivity.this,"search in the phone",Toast.LENGTH_SHORT).show();
