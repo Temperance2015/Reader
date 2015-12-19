@@ -17,33 +17,28 @@ import java.util.ArrayList;
 /**
  * Created by Isabel on 2015/12/14.
  */
-public class BooklistAdapter extends RecyclerView.Adapter<BooklistAdapter.ViewHolder> {
+public class BooklistAdapter extends RecyclerView.Adapter<BooklistAdapter.ViewHolder> implements View.OnClickListener{
 
     private ArrayList<Integer> bookId;
     private ArrayList<String> bookTitle;
     private ArrayList<String> readDate;
     private final int background;
     private final TypedValue typedValue = new TypedValue();
+    private OnRecyclerViewItemClickListener mOnItemClickListener = null;
+    public static interface OnRecyclerViewItemClickListener {
+        void onItemClick(View view , int data);
+    }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        public TextView id;
-        public TextView title;
-        public TextView date;
+    public void setOnItemClickListener(OnRecyclerViewItemClickListener listener) {
+        this.mOnItemClickListener = listener;
+    }
 
-        public ViewHolder(View v){
-            super(v);
-            id = (TextView) v.findViewById(R.id.book_Id);
-            title = (TextView) v.findViewById(R.id.book_title);
-            date = (TextView) v.findViewById(R.id.read_date);
-            v.setOnClickListener(this);
+    @Override
+     public void onClick(View view){
+        if (mOnItemClickListener != null) {
+            //使用getTag方法获取数据
+            mOnItemClickListener.onItemClick(view,(int)view.getTag());
         }
-
-        @Override
-        public void onClick(View view){
-            String text = "you click book " + title.getText() + "read in " + date.getText();
-            Snackbar.make(view,text,Snackbar.LENGTH_SHORT).show();
-        }
-
     }
 
     public BooklistAdapter(Context context,ArrayList<Integer> id,ArrayList<String> title,ArrayList<String> date){
@@ -54,11 +49,25 @@ public class BooklistAdapter extends RecyclerView.Adapter<BooklistAdapter.ViewHo
         background = typedValue.resourceId;
     }
 
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        public TextView id;
+        public TextView title;
+        public TextView date;
+
+        public ViewHolder(View v){
+            super(v);
+            id = (TextView) v.findViewById(R.id.book_Id);
+            title = (TextView) v.findViewById(R.id.book_title);
+            date = (TextView) v.findViewById(R.id.read_date);
+        }
+    }
+
     @Override
     public BooklistAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,int viewType){
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.book_list_item,parent,false);
         v.setBackgroundResource(background);
         ViewHolder vh = new ViewHolder(v);
+        v.setOnClickListener(this);//将创建的View注册点击事件
         return vh;
     }
 
@@ -67,6 +76,7 @@ public class BooklistAdapter extends RecyclerView.Adapter<BooklistAdapter.ViewHo
         holder.id.setText(bookId.get(position).toString());
         holder.title.setText(bookTitle.get(position));
         holder.date.setText(readDate.get(position));
+        holder.itemView.setTag(bookId.get(position));//将数据保存在itemView的Tag中，点击时进行获取
     }
 
     @Override

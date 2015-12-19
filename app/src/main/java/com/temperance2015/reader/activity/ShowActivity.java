@@ -17,5 +17,6 @@ public class ShowActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show);
         show_book_content = (TextView) findViewById(R.id.show_book_content);
+        show_book_content.setText("sdafsdagsdafsdafsadfsadfsdafsdfsdafsdafsagtrjtyjktdjd");
     }
 }
