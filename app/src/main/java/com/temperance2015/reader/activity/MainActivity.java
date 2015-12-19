@@ -25,11 +25,7 @@ import com.temperance2015.reader.util.Tools;
 import org.litepal.crud.DataSupport;
 import org.litepal.tablemanager.Connector;
 
-import java.io.File;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 
@@ -37,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView bookListView;
     private LinearLayoutManager linearLayoutManager;
+    private ArrayList<Integer> myId = new ArrayList<>();
     private ArrayList<String> myDataSet = new ArrayList<>();
     private ArrayList<String> myReadDate = new ArrayList<>();
     private BooklistAdapter booklistAdapter;
@@ -44,22 +41,14 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
 
-//    private void inDB(){
-//        for (int i = 0;i < 10;i++){
-//            Books book = new Books();
-//            book.setTitle("book " + i);
-//            book.setReadDate(Tools.getDate());
-//            book.save();
-//        }
-//    }
-
     private void dataToList(){
         List<Books> booksList = DataSupport.findAll(Books.class);
         for (int i = 0;i < booksList.size();i++){
+            myId.add(booksList.get(i).getId());
             myDataSet.add(i, booksList.get(i).getTitle());
             myReadDate.add(i, booksList.get(i).getReadDate());
         }
-        booklistAdapter = new BooklistAdapter(MainActivity.this,myDataSet,myReadDate);
+        booklistAdapter = new BooklistAdapter(MainActivity.this,myId,myDataSet,myReadDate);
         bookListView.setAdapter(booklistAdapter);
     }
 
@@ -88,9 +77,6 @@ public class MainActivity extends AppCompatActivity {
         bookListView.setLayoutManager(linearLayoutManager);
         bookListView.setItemAnimator(new DefaultItemAnimator());
 
-//        if (DataSupport.find(Books.class,1) == null){
-//            inDB();
-//        }
         dataToList();
 
         //floatingActionButton
@@ -115,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                             case R.id.navigation_search:
                                 Tools.search(Tools.getSDPath());
                                 dataToList();
-                                Toast.makeText(MainActivity.this,"search the phone",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this,"search in the phone",Toast.LENGTH_SHORT).show();
                                 break;
                         }
                         menuItem.setChecked(true);

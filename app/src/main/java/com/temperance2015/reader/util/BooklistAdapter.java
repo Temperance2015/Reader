@@ -19,17 +19,20 @@ import java.util.ArrayList;
  */
 public class BooklistAdapter extends RecyclerView.Adapter<BooklistAdapter.ViewHolder> {
 
+    private ArrayList<Integer> bookId;
     private ArrayList<String> bookTitle;
     private ArrayList<String> readDate;
     private final int background;
     private final TypedValue typedValue = new TypedValue();
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        public TextView id;
         public TextView title;
         public TextView date;
 
         public ViewHolder(View v){
             super(v);
+            id = (TextView) v.findViewById(R.id.book_Id);
             title = (TextView) v.findViewById(R.id.book_title);
             date = (TextView) v.findViewById(R.id.read_date);
             v.setOnClickListener(this);
@@ -43,7 +46,8 @@ public class BooklistAdapter extends RecyclerView.Adapter<BooklistAdapter.ViewHo
 
     }
 
-    public BooklistAdapter(Context context,ArrayList<String> title,ArrayList<String> date){
+    public BooklistAdapter(Context context,ArrayList<Integer> id,ArrayList<String> title,ArrayList<String> date){
+        bookId = id;
         bookTitle = title;
         readDate = date;
         context.getTheme().resolveAttribute(R.attr.selectableItemBackground,typedValue,true);
@@ -60,6 +64,7 @@ public class BooklistAdapter extends RecyclerView.Adapter<BooklistAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder,int position){
+        holder.id.setText(bookId.get(position).toString());
         holder.title.setText(bookTitle.get(position));
         holder.date.setText(readDate.get(position));
     }

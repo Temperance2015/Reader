@@ -5,7 +5,9 @@ import android.util.Log;
 
 import com.temperance2015.reader.model.Books;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -37,7 +39,7 @@ public class Tools {
             if (files.length > 0){
                 for (int i = 0; i < files.length; i++){
                     if (!files[i].isDirectory()){
-                        if (files[i].getName().contains(".txt")){
+                        if (files[i].getName().endsWith(".txt")){
 //                            Log.d("search",i+" Path:"+files[i].getPath()+" name:"+files[i].getName());
                             Books book = new Books();
                             book.setPath(files[i].getPath());
@@ -53,5 +55,20 @@ public class Tools {
             }
         }catch (Exception e){
         }
+    }
+
+    public static String ReadFile(File file){
+        StringBuffer stringBuffer = new StringBuffer();
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line = bufferedReader.readLine()) != null){
+                stringBuffer.append(line);
+            }
+            bufferedReader.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return stringBuffer.toString();
     }
 }
