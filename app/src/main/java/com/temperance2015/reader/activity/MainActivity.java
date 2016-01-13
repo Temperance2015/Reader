@@ -1,5 +1,7 @@
 package com.temperance2015.reader.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -107,12 +109,36 @@ public class MainActivity extends AppCompatActivity {
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
                             case R.id.navigation_search:
+                                DataSupport.deleteAll(Books.class);
                                 myId.clear();
                                 myDataSet.clear();
                                 myReadDate.clear();
                                 Tools.search(Tools.getSDPath());
                                 dataToList();
                                 Toast.makeText(MainActivity.this,"search in the phone",Toast.LENGTH_SHORT).show();
+                                break;
+                            case R.id.navigation_clear:
+                                    AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+                                    dialog.setTitle("清除所有数据！");
+                                    dialog.setMessage("清除掉所有书籍和阅读记录，确定吗？");
+                                    dialog.setCancelable(false);
+                                    dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            DataSupport.deleteAll(Books.class);
+                                            myId.clear();
+                                            myDataSet.clear();
+                                            myReadDate.clear();
+                                            booklistAdapter = new BooklistAdapter(MainActivity.this, myId, myDataSet, myReadDate);
+                                            bookListView.setAdapter(booklistAdapter);
+                                        }
+                                    });
+                                    dialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                        }
+                                    });
+                                    dialog.show();
                                 break;
                         }
                         menuItem.setChecked(true);

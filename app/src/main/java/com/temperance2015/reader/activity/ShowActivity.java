@@ -1,9 +1,13 @@
 package com.temperance2015.reader.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.temperance2015.reader.R;
 import com.temperance2015.reader.model.Books;
 import com.temperance2015.reader.util.Tools;
@@ -28,5 +32,19 @@ public class ShowActivity extends AppCompatActivity {
         Books bookReading = DataSupport.find(Books.class, bookId);
         File file = new File(bookReading.getPath());
         show_book_content.setText(Tools.ReadFile(file));
+        show_book_content.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(ShowActivity.this, "click screen", Toast.LENGTH_SHORT).show();
+            }
+        });
+        show_book_content.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(ShowActivity.this,"long click",Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+
     }
 }
