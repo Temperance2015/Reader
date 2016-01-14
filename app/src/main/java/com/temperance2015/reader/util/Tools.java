@@ -2,6 +2,7 @@ package com.temperance2015.reader.util;
 
 import android.os.Environment;
 import android.util.Log;
+import android.util.Xml;
 
 import com.temperance2015.reader.model.Books;
 
@@ -9,7 +10,10 @@ import org.litepal.crud.DataSupport;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -70,17 +74,21 @@ public class Tools {
     }
 
     public static String ReadFile(File file){
-        StringBuffer stringBuffer = new StringBuffer();
+        InputStreamReader inputStreamReader;
+        StringBuilder stringBuilder = new StringBuilder();
+        String finalStr = "";
         try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+            inputStreamReader = new InputStreamReader(new FileInputStream(file));
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             String line;
             while ((line = bufferedReader.readLine()) != null){
-                stringBuffer.append(line);
+                stringBuilder.append(line);
             }
             bufferedReader.close();
+            finalStr = new String(stringBuilder.toString().getBytes("utf-8"),"UTF-8");//将得到的字符串转换成使用UTF-8的字节数组再将byte数组转化回utf-8的字符串
         }catch (Exception e){
             e.printStackTrace();
         }
-        return stringBuffer.toString();
+        return finalStr;
     }
 }
