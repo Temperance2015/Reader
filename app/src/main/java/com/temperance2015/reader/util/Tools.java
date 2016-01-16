@@ -8,6 +8,7 @@ import com.temperance2015.reader.model.Books;
 
 import org.litepal.crud.DataSupport;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -73,22 +74,40 @@ public class Tools {
         }
     }
 
-    public static String ReadFile(File file){
-        InputStreamReader inputStreamReader;
-        StringBuilder stringBuilder = new StringBuilder();
-        String finalStr = "";
-        try {
-            inputStreamReader = new InputStreamReader(new FileInputStream(file));
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            String line;
-            while ((line = bufferedReader.readLine()) != null){
-                stringBuilder.append(line);
-            }
-            bufferedReader.close();
-            finalStr = new String(stringBuilder.toString().getBytes("utf-8"),"UTF-8");//将得到的字符串转换成使用UTF-8的字节数组再将byte数组转化回utf-8的字符串
-        }catch (Exception e){
-            e.printStackTrace();
+    public static String getTxtType(File file) throws Exception {
+        BufferedInputStream bin = new BufferedInputStream(new FileInputStream(file));
+        int p = (bin.read() << 8) + bin.read();
+        String code;
+        switch (p) {
+            case 0xefbb:
+                code = "UTF-8";
+                break;
+            case 0xfffe:
+                code = "Unicode";
+                break;
+            case 0xfeff:
+                code = "UTF-16BE";
+                break;
+            default:
+                code = "GBK";
         }
-        return finalStr;
+        return code;
+    }
+//    java	        txt
+//    unicode	 unicode big endian
+//    utf-8	     utf-8
+//    utf-16	 unicode
+//    gb2312	 ANSI
+
+    public static String ReadFile(File file) throws Exception{
+        StringBuilder stringBuilder = new StringBuilder();
+        InputStreamReader inputStreamReader = new InputStreamReader(new FileInputStream(file), Tools.getTxtType(file));
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+        String line;
+        while ((line = bufferedReader.readLine()) != null){
+            stringBuilder.append(line);
+        }
+        bufferedReader.close();
+        return stringBuilder.toString();
     }
 }

@@ -31,7 +31,11 @@ public class ShowActivity extends AppCompatActivity {
         int bookId = intent.getIntExtra("BOOK_ID", -1);
         Books bookReading = DataSupport.find(Books.class, bookId);
         File file = new File(bookReading.getPath());
-        show_book_content.setText(Tools.ReadFile(file));
+        try {
+            show_book_content.setText(Tools.ReadFile(file));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         show_book_content.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
