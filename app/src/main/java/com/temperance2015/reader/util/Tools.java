@@ -1,20 +1,14 @@
 package com.temperance2015.reader.util;
 
 import android.os.Environment;
-import android.util.Log;
-import android.util.Xml;
 
 import com.temperance2015.reader.model.Books;
 
 import org.litepal.crud.DataSupport;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -99,15 +93,4 @@ public class Tools {
 //    utf-16	 unicode
 //    gb2312	 ANSI
 
-    public static String ReadFile(File file) throws Exception{
-        StringBuilder stringBuilder = new StringBuilder();
-        InputStreamReader inputStreamReader = new InputStreamReader(new FileInputStream(file), Tools.getTxtType(file));
-        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-        String line;
-        while ((line = bufferedReader.readLine()) != null){
-            stringBuilder.append(line);
-        }
-        bufferedReader.close();
-        return stringBuilder.toString();
-    }
 }
