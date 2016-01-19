@@ -1,14 +1,9 @@
 package com.temperance2015.reader.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Layout;
-import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.temperance2015.reader.R;
@@ -22,7 +17,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import java.nio.CharBuffer;
 
 /**
  * Created by Isabel on 2015/12/19.
@@ -33,8 +27,6 @@ public class ShowActivity extends AppCompatActivity {
     private String textCache;
     private StringBuilder textContent = new StringBuilder();
     private int textLength;
-    private int startIndex;
-    private int endIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -96,16 +88,14 @@ public class ShowActivity extends AppCompatActivity {
 
     }
 
-    private String ReadFile(File file) throws Exception{
-        StringBuilder stringBuilder = new StringBuilder();
-        InputStreamReader inputStreamReader = new InputStreamReader(new FileInputStream(file), Tools.getTxtType(file));
-        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-        String text;
-        if ((text = bufferedReader.readLine()) != null){
-            stringBuilder.append(text);
+    @Override
+    public void onBackPressed(){
+        try{
+            bufferedReader.close();
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        bufferedReader.mark(2000);
-        return stringBuilder.toString();
+        finish();
     }
 
 }

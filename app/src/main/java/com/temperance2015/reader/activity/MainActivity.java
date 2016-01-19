@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(View view, int data) {
                 Toast.makeText(MainActivity.this, "You choose book " + data, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainActivity.this, ShowActivity.class);
-                intent.putExtra("BOOK_ID",data);
+                intent.putExtra("BOOK_ID", data);
                 startActivity(intent);
             }
         });
@@ -140,6 +140,11 @@ public class MainActivity extends AppCompatActivity {
                                     });
                                     dialog.show();
                                 break;
+                            case R.id.navigation_path:
+                                Intent intent = new Intent(MainActivity.this,FilePathActivity.class);
+                                startActivity(intent);
+                                finish();
+                                break;
                         }
                         menuItem.setChecked(true);
                         drawerLayout.closeDrawers();
@@ -168,4 +173,5 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

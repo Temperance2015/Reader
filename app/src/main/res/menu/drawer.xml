@@ -9,5 +9,8 @@
         <item
             android:id="@+id/navigation_clear"
             android:title="@string/navigation_clear" />
+        <item
+            android:id="@+id/navigation_path"
+            android:title="@string/navigation_path" />
     </group>
 </menu>

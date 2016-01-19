@@ -22,6 +22,9 @@
         <activity android:name=".activity.ShowActivity" android:theme="@style/AppTheme.NoActionBar.Fullscreen">
         </activity>
 
+        <activity android:name=".activity.FilePathActivity" android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
     </application>
 
 </manifest>

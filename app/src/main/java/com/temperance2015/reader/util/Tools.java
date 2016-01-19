@@ -46,15 +46,14 @@ public class Tools {
                 for (int j = 0;j < booksList.size();j++){
                     pathList.add(booksList.get(j).getPath());
                 }
-                for (int i = 0; i < files.length; i++){
-                    if (!files[i].isDirectory()){
-                        if (files[i].getName().endsWith(".txt")){
-//                            Log.d("search",i+" Path:"+files[i].getPath()+" name:"+files[i].getName());
-                            if (!pathList.contains(files[i].getPath())){
+                for (File x : files){
+                    if (!x.isDirectory()){
+                        if (x.getName().endsWith(".txt")){
+                            if (!pathList.contains(x.getPath())){
                                 Books book = new Books();
-                                book.setPath(files[i].getPath());
+                                book.setPath(x.getPath());
                                 book.setReadDate(Tools.getDate());
-                                book.setTitle(files[i].getName());
+                                book.setTitle(x.getName());
                                 book.save();
                             }
                         }
